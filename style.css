@@ -209,6 +209,10 @@ body {
     display: none;
 }
 
+.action-btn.play-another {
+    margin-right: 20px; /* New rule for spacing */
+}
+
 /* Money Screen Styles */
 .info-panel {
     background-color: var(--border-color);
