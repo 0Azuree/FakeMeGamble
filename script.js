@@ -20,6 +20,7 @@ const resetBtn = document.querySelector('.reset-btn');
 const playerBalanceEl = document.getElementById('player-balance');
 const moneyBalanceEl = document.getElementById('money-balance');
 const betAmountEl = document.getElementById('bet-amount');
+const betAmountValueEl = document.getElementById('bet-amount-value');
 const placeBetBtn = document.getElementById('place-bet-btn');
 const playerHandEl = document.getElementById('player-hand');
 const dealerHandEl = document.getElementById('dealer-hand');
@@ -40,6 +41,7 @@ const financialStatusEl = document.getElementById('financial-status');
 // Initial Setup
 updateBalances();
 showScreen('home-screen');
+updateBetSliderMax();
 
 // Event Listeners for Navigation
 menuBtns.forEach(btn => {
@@ -50,11 +52,11 @@ menuBtns.forEach(btn => {
 
 backBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Simple back navigation for now
         if (btn.closest('.screen').id === 'gamble-menu') {
             showScreen('home-screen');
         } else if (btn.closest('.screen').id === 'game-screen') {
             resetGame();
+            updateBetSliderMax();
             showScreen('gamble-menu');
         } else {
             showScreen('home-screen');
@@ -80,12 +82,18 @@ resetBtn.addEventListener('click', () => {
     }
 });
 
+// Slider Listener
+betAmountEl.addEventListener('input', () => {
+    betAmountValueEl.textContent = betAmountEl.value;
+});
+
 // Game Logic Listeners (Blackjack)
 placeBetBtn.addEventListener('click', startGame);
 hitBtn.addEventListener('click', playerHit);
 standBtn.addEventListener('click', playerStand);
 playAnotherBtn.addEventListener('click', () => {
     resetGame();
+    updateBetSliderMax();
     showScreen('game-screen');
 });
 
@@ -97,7 +105,6 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
 
-    // Update displays for specific screens
     if (screenId === 'money-screen') {
         updateMoneyHistory();
     }
@@ -106,6 +113,12 @@ function showScreen(screenId) {
 function updateBalances() {
     playerBalanceEl.textContent = playerBalance;
     moneyBalanceEl.textContent = playerBalance;
+}
+
+function updateBetSliderMax() {
+    betAmountEl.max = playerBalance;
+    betAmountEl.value = Math.min(100, playerBalance);
+    betAmountValueEl.textContent = betAmountEl.value;
 }
 
 function updateMoneyHistory() {
@@ -133,7 +146,6 @@ function createDeck() {
             deck.push({ rank, suit });
         }
     }
-    // Simple Fisher-Yates shuffle
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -177,7 +189,7 @@ function renderCards(hand, container, isDealer) {
         cardEl.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : ''}`;
         
         if (isDealer && index === 1 && isGameActive) {
-            cardEl.innerHTML = `?`; // Hide the second card
+            cardEl.innerHTML = `?`;
         } else {
             cardEl.innerHTML = `
                 <span>${card.rank}</span>
@@ -192,7 +204,7 @@ function renderCards(hand, container, isDealer) {
 
 function startGame() {
     currentBet = parseInt(betAmountEl.value);
-    if (isNaN(currentBet) || currentBet <= 0 || currentBet > playerBalance) {
+    if (currentBet <= 0) {
         alert("Please enter a valid bet amount.");
         return;
     }
@@ -234,11 +246,9 @@ function playerStand() {
     isGameActive = false;
     gameControls.classList.add('hidden');
     
-    // Show dealer's hidden card
     renderCards(dealerHand, dealerHandEl, false);
     dealerScoreEl.textContent = calculateScore(dealerHand);
 
-    // Dealer's turn
     while (calculateScore(dealerHand) < 17) {
         dealerHand.push(drawCard());
         renderCards(dealerHand, dealerHandEl, false);
@@ -295,5 +305,6 @@ function resetAllProgress() {
     updateBalances();
     updateMoneyHistory();
     resetGame();
+    updateBetSliderMax();
     showScreen('home-screen');
 }
