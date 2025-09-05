@@ -32,6 +32,7 @@ const playAnotherBtn = document.getElementById('play-another-btn');
 const gameControls = document.querySelector('.game-controls');
 const betControls = document.querySelector('.bet-controls');
 const gameMessageEl = document.getElementById('game-message');
+const gameBackButton = document.querySelector('#game-screen .back-btn');
 
 // Money Screen Elements
 const totalWinningsEl = document.getElementById('total-winnings');
@@ -182,13 +183,13 @@ function drawCard() {
     return deck.pop();
 }
 
-function renderCards(hand, container, isDealer) {
+function renderCards(hand, container, isDealer, revealAll) {
     container.innerHTML = '';
     hand.forEach((card, index) => {
         const cardEl = document.createElement('div');
         cardEl.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : ''}`;
         
-        if (isDealer && index === 1 && isGameActive) {
+        if (isDealer && index === 1 && !revealAll) {
             cardEl.innerHTML = `?`;
         } else {
             cardEl.innerHTML = `
@@ -217,14 +218,16 @@ function startGame() {
     playAnotherBtn.classList.add('hidden');
     gameControls.classList.remove('hidden');
     betControls.classList.add('hidden');
-    
+    gameBackButton.classList.add('hidden'); // Hide back button
+
+    // Deal cards
     playerHand.push(drawCard(), drawCard());
     dealerHand.push(drawCard(), drawCard());
 
-    renderCards(playerHand, playerHandEl, false);
-    renderCards(dealerHand, dealerHandEl, true);
+    renderCards(playerHand, playerHandEl, false, true);
+    renderCards(dealerHand, dealerHandEl, true, false); // Don't reveal all dealer cards
     playerScoreEl.textContent = calculateScore(playerHand);
-    dealerScoreEl.textContent = '?';
+    dealerScoreEl.textContent = `${getCardValue(dealerHand[0])}+?`;
 
     if (calculateScore(playerHand) === 21) {
         endGame('blackjack');
@@ -233,7 +236,7 @@ function startGame() {
 
 function playerHit() {
     playerHand.push(drawCard());
-    renderCards(playerHand, playerHandEl, false);
+    renderCards(playerHand, playerHandEl, false, true);
     const score = calculateScore(playerHand);
     playerScoreEl.textContent = score;
 
@@ -246,30 +249,72 @@ function playerStand() {
     isGameActive = false;
     gameControls.classList.add('hidden');
     
-    renderCards(dealerHand, dealerHandEl, false);
+    // Reveal all dealer cards
+    renderCards(dealerHand, dealerHandEl, false, true);
     dealerScoreEl.textContent = calculateScore(dealerHand);
 
-    while (calculateScore(dealerHand) < 17) {
-        dealerHand.push(drawCard());
-        renderCards(dealerHand, dealerHandEl, false);
-        dealerScoreEl.textContent = calculateScore(dealerHand);
-    }
+    // Manipulate odds
+    const randomChance = Math.random();
+    let finalResult;
     
+    // 55% chance to win, 50% chance to lose (this means a 5% chance of a special outcome like a draw)
+    if (randomChance < 0.55) { // 55% win chance
+        finalResult = 'win';
+    } else if (randomChance < 0.55 + 0.50) { // 50% lose chance
+        finalResult = 'loss';
+    } else { // remaining 5% is a draw
+        finalResult = 'draw';
+    }
+
+    // Overwrite the random result with actual game logic if a bust happens
     const playerScore = calculateScore(playerHand);
     const dealerScore = calculateScore(dealerHand);
 
-    if (dealerScore > 21 || playerScore > dealerScore) {
-        endGame('win');
-    } else if (playerScore < dealerScore) {
-        endGame('loss');
-    } else {
-        endGame('draw');
+    if (dealerScore > 21) {
+        finalResult = 'win'; // Dealer busts, player always wins
+    } else if (playerScore > 21) {
+        finalResult = 'bust'; // Player busts, player always loses
     }
+
+    // Now, adjust scores to match the finalResult
+    if (finalResult === 'win') {
+        // Ensure player wins. If dealer is already lower, we don't need to change anything.
+        if (playerScore <= dealerScore && playerScore <= 21) {
+            // Give player a slightly higher score than the dealer
+            if (dealerScore > 17 && dealerScore < 21) {
+                // If dealer is about to stand, give player a higher score
+                playerHand = [{rank: '10', suit: '♠'}, {rank: 'K', suit: '♥'}];
+            } else if (playerScore < dealerScore) {
+                playerHand = [{rank: '10', suit: '♠'}, {rank: 'J', suit: '♥'}];
+                dealerHand = [{rank: '5', suit: '♠'}, {rank: '5', suit: '♥'}];
+            } else {
+                dealerHand = [{rank: '5', suit: '♠'}, {rank: '5', suit: '♥'}];
+            }
+        }
+    } else if (finalResult === 'loss') {
+        // Ensure player loses. Make dealer's score higher than the player's.
+        if (dealerScore < playerScore && dealerScore < 21) {
+            dealerHand = [{rank: '10', suit: '♠'}, {rank: 'K', suit: '♥'}];
+        }
+    } else if (finalResult === 'draw') {
+        // Ensure a draw
+        playerHand = [{rank: '10', suit: '♠'}, {rank: '7', suit: '♥'}];
+        dealerHand = [{rank: '9', suit: '♠'}, {rank: '8', suit: '♥'}];
+    }
+    
+    // Re-render and update scores with the adjusted hands
+    renderCards(playerHand, playerHandEl, false, true);
+    renderCards(dealerHand, dealerHandEl, false, true);
+    playerScoreEl.textContent = calculateScore(playerHand);
+    dealerScoreEl.textContent = calculateScore(dealerHand);
+
+    endGame(finalResult);
 }
 
 function endGame(result) {
     gameControls.classList.add('hidden');
-    
+    gameBackButton.classList.remove('hidden'); // Show back button
+
     if (result === 'win' || result === 'blackjack') {
         playerBalance += currentBet;
         totalWinnings += currentBet;
@@ -295,6 +340,7 @@ function resetGame() {
     gameMessageEl.textContent = '';
     playAnotherBtn.classList.add('hidden');
     betControls.classList.remove('hidden');
+    gameBackButton.classList.remove('hidden'); // Ensure back button is visible
     betAmountEl.value = '100';
 }
 
