@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeMeGamble - A Fake Casino Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>FakeMeGamble</h1>
+        <nav>
+            <button id="money-btn">Money</button>
+            <button id="how-to-play-btn">How to Play</button>
+        </nav>
+    </header>
+
+    <main class="game-container">
+        <section id="dashboard" class="dashboard">
+            <div class="balance-info">
+                <p>Your Balance: $<span id="player-balance">10000</span></p>
+                <p>Dealer's Balance: $<span id="dealer-balance">10000</span></p>
+            </div>
+            <div class="bet-section">
+                <label for="bet-amount">Place Your Bet:</label>
+                <input type="number" id="bet-amount" value="100" min="1" step="1">
+                <button id="place-bet-btn">Place Bet</button>
+            </div>
+        </section>
+
+        <section id="game-area" class="game-area hidden">
+            <h2 id="game-title">Blackjack</h2>
+            <div id="game-content">
+                <div class="hand-container">
+                    <h3>Dealer's Hand: <span id="dealer-score">0</span></h3>
+                    <div id="dealer-hand" class="hand"></div>
+                </div>
+                <div class="hand-container">
+                    <h3>Your Hand: <span id="player-score">0</span></h3>
+                    <div id="player-hand" class="hand"></div>
+                </div>
+                <div id="game-controls">
+                    <button id="hit-btn">Hit</button>
+                    <button id="stand-btn">Stand</button>
+                    <button id="double-btn">Double Down</button>
+                </div>
+                <div id="game-message" class="game-message"></div>
+                <button id="play-another-btn" class="play-another-btn hidden">Play Another</button>
+            </div>
+        </section>
+        
+        <section id="money-history" class="money-history hidden">
+            <h2>Money History</h2>
+            <div id="money-history-content">
+                <p>Total Winnings: $<span id="total-winnings">0</span></p>
+                <p>Total Losses: $<span id="total-losses">0</span></p>
+                <p>Status: <span id="financial-status" class="positive">In the positives!</span></p>
+            </div>
+        </section>
+
+        <section id="how-to-play" class="how-to-play hidden">
+            <h2>How to Play</h2>
+            <div class="rules">
+                <h3>Blackjack Rules</h3>
+                <p>The goal is to have a hand with a value as close to 21 as possible without going over. Cards are valued as follows:</p>
+                <ul>
+                    <li>**2-10:** Face value.</li>
+                    <li>**Jack, Queen, King:** 10 points.</li>
+                    <li>**Ace:** 1 or 11 points (player's choice).</li>
+                </ul>
+                <p>You and the dealer are dealt two cards. You can choose to "Hit" (take another card) or "Stand" (keep your current hand).</p>
+                <p>If your hand value goes over 21, you bust and lose the bet. If the dealer busts, you win. The winner is the one with the higher score without busting.</p>
+            </div>
+            </section>
+    </main>
+
+    <footer class="footer">
+        <button id="reset-btn">Reset Game</button>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
