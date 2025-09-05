@@ -45,7 +45,10 @@
             </div>
             <p id="game-message" class="game-message"></p>
             <div class="bet-controls">
-                <input type="number" id="bet-amount" value="100" min="1" step="1">
+                <div class="slider-container">
+                    <p class="bet-value">Bet: $<span id="bet-amount-value">100</span></p>
+                    <input type="range" id="bet-amount" min="1" max="1000" value="100" class="bet-slider">
+                </div>
                 <button id="place-bet-btn" class="action-btn">Place Bet</button>
             </div>
             <div class="game-controls hidden">
@@ -73,7 +76,15 @@
                 <h3>Blackjack Rules</h3>
                 <p>The goal is to get a hand value as close to 21 as possible without going over. Face cards are worth 10, Aces are 1 or 11, and others are their face value.</p>
                 <p>You can "Hit" to take another card or "Stand" to keep your hand. If you go over 21, you lose. The winner is the one with the higher score without busting.</p>
-                </div>
+                <h3>Poker Rules (Coming Soon)</h3>
+                <p>Placeholder for Poker rules.</p>
+                <h3>Roulette Rules (Coming Soon)</h3>
+                <p>Placeholder for Roulette rules.</p>
+                <h3>Slots Rules (Coming Soon)</h3>
+                <p>Placeholder for Slots rules.</p>
+                <h3>Dice Rules (Coming Soon)</h3>
+                <p>Placeholder for Dice rules.</p>
+            </div>
             <button class="back-btn">Back</button>
         </section>
     </div>
