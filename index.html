@@ -3,90 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FakeMeGamble - A Fake Casino Game</title>
-    <link rel="stylesheet" href="style.css">
+    <title>FakeMeGamble - Premium Casino Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="main-container">
-        <section id="home-screen" class="screen active">
-            <h1 class="title">FakeMeGamble</h1>
-            <div class="button-grid">
-                <button class="menu-btn" data-target="gamble-menu">Gamble</button>
-                <button class="menu-btn" data-target="money-screen">Money</button>
-                <button class="menu-btn" data-target="how-to-play-screen">How To Play</button>
-                <button class="menu-btn reset-btn">Reset</button>
-            </div>
-        </section>
-
-        <section id="gamble-menu" class="screen">
-            <h2 class="title">Choose Your Game</h2>
-            <div class="button-grid">
-                <button class="game-btn" data-game="blackjack">Blackjack</button>
-                <button class="game-btn" data-game="poker">Poker (Coming Soon)</button>
-                <button class="game-btn" data-game="roulette">Roulette (Coming Soon)</button>
-                <button class="game-btn" data-game="slots">Slots (Coming Soon)</button>
-                <button class="game-btn" data-game="dice">Dice (Coming Soon)</button>
-            </div>
-            <button class="back-btn">Back</button>
-        </section>
-
-        <section id="game-screen" class="screen">
-            <h2 class="game-title">Blackjack</h2>
-            <p class="game-balance">Your Balance: $<span id="player-balance">5500</span></p>
-            <div class="game-board">
-                <div class="player-area">
-                    <h3 class="hand-label">Your Hand: <span id="player-score">0</span></h3>
-                    <div id="player-hand" class="hand-cards"></div>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-crown"></i> FakeMeGamble</h1>
+            <div class="balance-container">
+                <div class="balance-card">
+                    <i class="fas fa-wallet"></i>
+                    <span>Balance: $<span id="balance">10000</span></span>
                 </div>
-                <div class="dealer-area">
-                    <h3 class="hand-label">Dealer's Hand: <span id="dealer-score">0</span></h3>
-                    <div id="dealer-hand" class="hand-cards"></div>
+                <div class="net-worth" id="netWorth">
+                    <span class="positive">Net: +$0</span>
                 </div>
             </div>
-            <p id="game-message" class="game-message"></p>
-            <div class="bet-controls">
-                <div class="slider-container">
-                    <p class="bet-value">Bet: $<span id="bet-amount-value">100</span></p>
-                    <input type="range" id="bet-amount" min="1" max="1000" value="100" class="bet-slider">
-                </div>
-                <button id="place-bet-btn" class="action-btn">Place Bet</button>
-            </div>
-            <div class="game-controls hidden">
-                <button id="hit-btn" class="action-btn">Hit</button>
-                <button id="stand-btn" class="action-btn">Stand</button>
-            </div>
-            <button id="play-another-btn" class="action-btn hidden">Play Another</button>
-            <button class="back-btn">Back</button>
-        </section>
-        
-        <section id="money-screen" class="screen">
-            <h2 class="title">Your Financials</h2>
-            <div class="info-panel">
-                <p>Current Balance: $<span id="money-balance">5500</span></p>
-                <p>Total Winnings: $<span id="total-winnings">0</span></p>
-                <p>Total Losses: $<span id="total-losses">0</span></p>
-                <p>Status: <span id="financial-status" class="status-neutral">Even</span></p>
-            </div>
-            <button class="back-btn">Back</button>
-        </section>
+        </header>
 
-        <section id="how-to-play-screen" class="screen">
-            <h2 class="title">How To Play</h2>
-            <div class="rules-section">
-                <h3>Blackjack Rules</h3>
-                <p>The goal is to get a hand value as close to 21 as possible without going over. Face cards are worth 10, Aces are 1 or 11, and others are their face value.</p>
-                <p>You can "Hit" to take another card or "Stand" to keep your hand. If you go over 21, you lose. The winner is the one with the higher score without busting.</p>
-                <h3>Poker Rules (Coming Soon)</h3>
-                <p>Placeholder for Poker rules.</p>
-                <h3>Roulette Rules (Coming Soon)</h3>
-                <p>Placeholder for Roulette rules.</p>
-                <h3>Slots Rules (Coming Soon)</h3>
-                <p>Placeholder for Slots rules.</p>
-                <h3>Dice Rules (Coming Soon)</h3>
-                <p>Placeholder for Dice rules.</p>
+        <main class="main-content">
+            <div class="game-selection">
+                <h2>Choose Your Game</h2>
+                <div class="game-grid">
+                    <button class="game-card" onclick="selectGame('blackjack')">
+                        <i class="fas fa-cards-blank"></i>
+                        <h3>Blackjack</h3>
+                        <p>Beat the dealer with 21</p>
+                    </button>
+                    <button class="game-card" onclick="selectGame('roulette')">
+                        <i class="fas fa-circle-notch"></i>
+                        <h3>Roulette</h3>
+                        <p>Spin to win</p>
+                    </button>
+                    <button class="game-card" onclick="selectGame('slots')">
+                        <i class="fas fa-slot-machine"></i>
+                        <h3>Slots</h3>
+                        <p>Match the symbols</p>
+                    </button>
+                    <button class="game-card" onclick="selectGame('poker')">
+                        <i class="fas fa-hand-fist"></i>
+                        <h3>Poker</h3>
+                        <p>Best hand wins</p>
+                    </button>
+                    <button class="game-card" onclick="selectGame('baccarat')">
+                        <i class="fas fa-cards"></i>
+                        <h3>Baccarat</h3>
+                        <p>Player vs Banker</p>
+                    </button>
+                </div>
             </div>
-            <button class="back-btn">Back</button>
-        </section>
+
+            <div class="game-area" id="gameArea" style="display: none;">
+                <div class="game-header">
+                    <h2 id="gameTitle"></h2>
+                    <button class="btn-secondary" onclick="backToMenu()">
+                        <i class="fas fa-arrow-left"></i> Back to Menu
+                    </button>
+                </div>
+
+                <div class="betting-section">
+                    <div class="bet-input-group">
+                        <label for="betAmount">Bet Amount:</label>
+                        <div class="input-wrapper">
+                            <span class="currency">$</span>
+                            <input type="number" id="betAmount" min="1" max="10000" value="100">
+                            <button class="btn-max" onclick="setMaxBet()">MAX</button>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="playButton" onclick="playGame()">
+                        <i class="fas fa-play"></i> Play
+                    </button>
+                </div>
+
+                <div class="game-content" id="gameContent"></div>
+            </div>
+
+            <div class="stats-section">
+                <h2><i class="fas fa-chart-line"></i> Your Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-up"></i>
+                        <div>
+                            <p>Total Won</p>
+                            <span id="totalWon">$0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-down"></i>
+                        <div>
+                            <p>Total Lost</p>
+                            <span id="totalLost">$0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-percentage"></i>
+                        <div>
+                            <p>Win Rate</p>
+                            <span id="winRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-to-play">
+                <button class="btn-info" onclick="toggleHowToPlay()">
+                    <i class="fas fa-question-circle"></i> How to Play
+                </button>
+                <div id="howToPlayContent" class="how-to-play-content" style="display: none;">
+                    <div class="game-rules">
+                        <h3>Blackjack</h3>
+                        <p>Get closer to 21 than the dealer without going over. Face cards = 10, Aces = 1 or 11.</p>
+                    </div>
+                    <div class="game-rules">
+                        <h3>Roulette</h3>
+                        <p>Guess where the ball lands. Bet on numbers, colors, or sections.</p>
+                    </div>
+                    <div class="game-rules">
+                        <h3>Slots</h3>
+                        <p>Spin and match symbols. Three in a row wins!</p>
+                    </div>
+                    <div class="game-rules">
+                        <h3>Poker</h3>
+                        <p>Make the best 5-card hand. Royal flush wins biggest!</p>
+                    </div>
+                    <div class="game-rules">
+                        <h3>Baccarat</h3>
+                        <p>Bet on Player, Banker, or Tie. Closest to 9 wins.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <button class="btn-danger" onclick="resetGame()">
+                <i class="fas fa-refresh"></i> Reset Game
+            </button>
+            <p class="disclaimer">This is a fake gambling game for entertainment purposes only.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
